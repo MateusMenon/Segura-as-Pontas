@@ -7,6 +7,7 @@ import HomeScreen from "./HomeScreen";
 import AddGasto from "./AddGasto";
 import AddGanho from "./AddGanho";
 import ConfigScreen from "./ConfigScreen";
+import Resumo from "./Resumo";
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,7 @@ export default function App() {
           <Stack.Screen name="AddGasto" component={AddGasto} />
           <Stack.Screen name="AddGanho" component={AddGanho} />
           <Stack.Screen name="Config" component={ConfigScreen} />
+          <Stack.Screen name="Resumo" component={Resumo} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
