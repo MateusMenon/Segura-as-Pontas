@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "Segura-as-Pontas",
+    "slug": "Segura-as-Pontas",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/LogoIcone.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/LogoFundo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/LogoIcone.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": false
+    },
+    "androidStatusBar": {
+      "backgroundColor": "#4CAF50",
+      "barStyle": "light-content",
+      "translucent": false
+    },
+    "androidNavigationBar": {
+      "backgroundColor": "#FFFFFF",
+      "barStyle": "dark-content"
+    },
+    "web": {
+      "favicon": "./assets/LogoIcone.png"
+    },
+    "plugins": [
+      "expo-sqlite"
+    ]
+  }
+}
