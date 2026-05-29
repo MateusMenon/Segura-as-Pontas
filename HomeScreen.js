@@ -15,6 +15,9 @@ export default function HomeScreen({ navigation }) {
     <SafeAreaView style={styles.container} edges={["top"]}>
       <View style={styles.header}>
         <Image source={require("./assets/Logo04.png")} style={styles.logo} />
+        <TouchableOpacity onPress={() => navigation.navigate("Config")}>
+          <Ionicons name="options-outline" size={22} color="#fff" />
+        </TouchableOpacity>
       </View>
 
       <View style={styles.body}>

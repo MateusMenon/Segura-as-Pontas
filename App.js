@@ -6,6 +6,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import HomeScreen from "./HomeScreen";
 import AddGasto from "./AddGasto";
 import AddGanho from "./AddGanho";
+import ConfigScreen from "./ConfigScreen";
 
 const Stack = createStackNavigator();
 
@@ -18,6 +19,7 @@ export default function App() {
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="AddGasto" component={AddGasto} />
           <Stack.Screen name="AddGanho" component={AddGanho} />
+          <Stack.Screen name="Config" component={ConfigScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
