@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from "react";
 import {
-  ScrollView, StyleSheet, Text,
+  Alert, ScrollView, StyleSheet, Text,
   TouchableOpacity, View,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { getSummary } from "./database/financeRepository";
+import { deleteTransaction, getSummary } from "./database/financeRepository";
 
 const formatMoney = (value) =>
   Number(value || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -14,6 +14,11 @@ const formatMoney = (value) =>
 export default function Resumo({ navigation }) {
   const insets = useSafeAreaInsets();
   const [summary, setSummary] = useState(null);
+
+  const carregarResumo = useCallback(async () => {
+    const next = await getSummary();
+    setSummary(next);
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
@@ -26,6 +31,34 @@ export default function Resumo({ navigation }) {
       return () => { isActive = false; };
     }, [])
   );
+
+  const editarMovimentacao = (transaction) => {
+    navigation.navigate(
+      transaction.type === "income" ? "AddGanho" : "AddGasto",
+      { transaction }
+    );
+  };
+
+  const confirmarExclusao = (transaction) => {
+    const mensagem = transaction.type === "income"
+      ? "Deseja excluir esta renda extra?"
+      : "Deseja excluir este gasto?";
+
+    Alert.alert("Confirmar exclusão", mensagem, [
+      { text: "Cancelar", style: "cancel" },
+      {
+        text: "Excluir", style: "destructive",
+        onPress: async () => {
+          try {
+            await deleteTransaction(transaction.id);
+            await carregarResumo();
+          } catch {
+            Alert.alert("Erro", "Não foi possível excluir.");
+          }
+        },
+      },
+    ]);
+  };
 
   const transactions = summary?.transactions || [];
   const expensesByCategory = Object.entries(summary?.expensesByCategory || {});
@@ -92,9 +125,17 @@ export default function Resumo({ navigation }) {
               </Text>
               <Text style={styles.transactionDate}>{item.date}</Text>
             </View>
-            <Text style={[styles.transactionValue, item.type === "income" ? styles.income : styles.expense]}>
-              {item.type === "income" ? "+" : "-"} {formatMoney(item.amount)}
-            </Text>
+            <View style={styles.transactionActions}>
+              <Text style={[styles.transactionValue, item.type === "income" ? styles.income : styles.expense]}>
+                {item.type === "income" ? "+" : "-"} {formatMoney(item.amount)}
+              </Text>
+              <TouchableOpacity style={styles.editButton} onPress={() => editarMovimentacao(item)}>
+                <Ionicons name="create-outline" size={18} color="#333" />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.deleteButton} onPress={() => confirmarExclusao(item)}>
+                <Ionicons name="trash-outline" size={18} color="#E53935" />
+              </TouchableOpacity>
+            </View>
           </View>
         ))}
       </ScrollView>
@@ -122,4 +163,7 @@ const styles = StyleSheet.create({
   transactionTitle: { color: "#333", fontWeight: "bold" },
   transactionDate: { color: "#777", marginTop: 4 },
   transactionValue: { fontSize: 16, fontWeight: "bold" },
+  transactionActions: { flexDirection: "row", alignItems: "center", gap: 10 },
+  editButton: { width: 34, height: 34, borderRadius: 10, borderWidth: 1, borderColor: "#ddd", alignItems: "center", justifyContent: "center" },
+  deleteButton: { width: 34, height: 34, borderRadius: 10, borderWidth: 1, borderColor: "#F5C2C0", alignItems: "center", justifyContent: "center" },
 });
